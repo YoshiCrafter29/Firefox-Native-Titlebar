@@ -7,6 +7,7 @@ The titlebar buttons are fully functional, both when the window is maximized and
 ## Installation steps
 
 1. On your Firefox profile, make sure that in `about:config`, those properties are set:
+
 |Property Name|Value|
 |--|--|
 |`toolkit.legacyUserProfileCustomizations.stylesheets`|`true`|
