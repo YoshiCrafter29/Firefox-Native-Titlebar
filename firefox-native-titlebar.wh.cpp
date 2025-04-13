@@ -8,6 +8,7 @@
 // @homepage        https://yoshicrafter29.bsky.social/
 // @include         librewolf.exe
 // @include         firefox.exe
+// @include         thunderbird.exe
 // @compilerOptions -ldwmapi
 // ==/WindhawkMod==
 
