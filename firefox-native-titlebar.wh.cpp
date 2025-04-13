@@ -57,7 +57,7 @@ bool isCursorInControlsArea(HWND hWnd, POINT &p) {
     bounds.right += windowRect.left;
     bounds.bottom += windowRect.top;
 
-    return ((p.x >= bounds.left && p.x < bounds.right) && (p.y >= bounds.top && p.y <= bounds.bottom));
+    return ((p.x >= bounds.left && p.x <= bounds.right) && (p.y >= bounds.top && p.y <= bounds.bottom));
 }
 
 // Checks if the class of the window sent in parameter corresponds to className
