@@ -22,23 +22,16 @@ Readds the native titlebar to Firefox versions (without xul patch)
 // ==/WindhawkModReadme==
 
 #include <dwmapi.h>
-#include <minwindef.h>
-#include <windef.h>
-#include <windhawk_api.h>
 #include <windows.h>
 #include <windowsx.h>
-#include <winerror.h>
-#include <winnt.h>
 #include <cstddef>
 #include <cstdlib>
-
-using RegisterClassW_t = decltype(&RegisterClassW);
-RegisterClassW_t RegisterClassW_Original;
 
 WNDPROC mozWndProc;
 int wndProcAddress = 0;
 const LPCWSTR mozWindowClass = L"MozillaWindowClass";
 
+using RegisterClassW_t = decltype(&RegisterClassW);
 decltype(&SetWindowLongPtrW) SetWindowLongPtrW_Original;
 decltype(&GetWindowLongPtrW) GetWindowLongPtrW_Original;
 decltype(&DwmExtendFrameIntoClientArea) DwmExtendFrameIntoClientArea_Original;
@@ -135,7 +128,7 @@ LRESULT WINAPI mozWndProcHook(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     return wndProc(hWnd, msg, wParam, lParam);
 }
 
-
+RegisterClassW_t RegisterClassW_Original;
 ATOM WINAPI RegisterClassW_Hook(WNDCLASSW* cl) {
     if (lstrcmp(cl->lpszClassName, mozWindowClass) == 0) {
         Wh_Log(L"Registering MozillaWindowClass");

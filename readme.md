@@ -8,9 +8,9 @@ The titlebar buttons are fully functional, both when the window is maximized and
 
 1. On your Firefox profile, make sure that in `about:config`, those properties are set:
 
-|Property Name|Value|
-|--|--|
-|`toolkit.legacyUserProfileCustomizations.stylesheets`|`true`|
+|Property Name|Type|Value|
+|--|--|--|
+|`toolkit.legacyUserProfileCustomizations.stylesheets`|Boolean|`true`|
 
 2. Then, drag and drop the [`userChrome.css`](userChrome.css) file in this repo within the `chrome` folder of your Firefox profile folder
     - To open your profile's directory, open `about:profiles`, scroll down to the one that states it is in use, then click the "Open Directory" button next on the "Root Directory" line.
@@ -22,7 +22,7 @@ The titlebar buttons are fully functional, both when the window is maximized and
 
 3. Open [Windhawk](https://windhawk.net/) (install it if it's not already present)
 
-4. Click on "Create a new mod", then copy and paste everything included in the [`windhawk.cpp`](windhawk.cpp) file
+4. Click on "Create a new mod", then copy and paste everything included in the [`firefox-native-titlebar.wh.cpp`](firefox-native-titlebar.wh.cpp) file
 
 5. Make sure "Enable mod" is checked, click on "Compile mod", and wait for it to compile.
 
@@ -33,10 +33,10 @@ The titlebar buttons are fully functional, both when the window is maximized and
 ## Screenshots
 
 ![LibreWolf](screenshots/librewolf.png)
-Running on LibreWolf version `136.0.4-1` (latest version as of April 2025)
+Running on [LibreWolf](https://librewolf.net/) version `136.0.4-1` (latest version as of April 2025)
 
 ![Firefox Developer Edition](screenshots/devedition-vertical.png)
-Running on Firefox Developer Edition `138.0b6` (latest version as of April 2025), with vertical tabs on
+Running on [Firefox Developer Edition](https://www.mozilla.org/en-US/firefox/developer/) `138.0b6` (latest version as of April 2025), with vertical tabs on
 
 ### Credits
 
