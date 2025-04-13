@@ -62,7 +62,8 @@ This mod only applies to LibreWolf and Firefox by default.
 
 ## Known Bugs & Quirks
 
-- [ ] Maximizing the dev tools window makes its titlebar invisible
+- [x] Maximizing the dev tools window makes its titlebar invisible
 - [ ] Disabling the mod while your browser is open might lead to a crash
 - [ ] Enabling the mod while your browser is open might lead to a crash upon closing
 - [ ] This mod does not adjusts Firefox's stylesheet to properly fit the transparency, leading to some text being unreadable especially on light mode.
+- [ ] The "Title Bar" option is pretty much broken now

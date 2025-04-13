@@ -2,7 +2,7 @@
 // @id              firefox-native-titlebar
 // @name            Firefox Native Titlebar
 // @description     Restores native titlebar buttons in Firefox
-// @version         0.1
+// @version         0.2
 // @author          YoshiCrafter29
 // @github          https://github.com/YoshiCrafter29
 // @homepage        https://yoshicrafter29.bsky.social/
@@ -22,13 +22,14 @@ Readds the native titlebar to Firefox versions (without xul patch)
 // ==/WindhawkModReadme==
 
 #include <dwmapi.h>
+#include <windhawk_api.h>
 #include <windows.h>
 #include <windowsx.h>
 #include <cstddef>
 #include <cstdlib>
 
 WNDPROC mozWndProc;
-int wndProcAddress = 0;
+int wndProcAddress, windowFlagsAddress = 0;
 const LPCWSTR mozWindowClass = L"MozillaWindowClass";
 
 using RegisterClassW_t = decltype(&RegisterClassW);
@@ -47,11 +48,15 @@ bool isCursorInControlsArea(HWND hWnd, POINT &p) {
     RECT windowRect;
     GetWindowRect(hWnd, &windowRect);
 
-    POINT offset = {
-        (GetSystemMetricsForDpi(SM_CXSIZE, GetDpiForWindow(hWnd)) * 3) + (GetSystemMetricsForDpi(SM_CXSIZEFRAME, GetDpiForWindow(hWnd)) * 2),
-        GetSystemMetricsForDpi(SM_CYSIZE, GetDpiForWindow(hWnd)) + (GetSystemMetricsForDpi(SM_CYBORDER, GetDpiForWindow(hWnd)) * 2)};
+    RECT bounds = {0,0,0,0};
+    DwmGetWindowAttribute(hWnd, DWMWA_CAPTION_BUTTON_BOUNDS, &bounds, sizeof(bounds));
 
-    return ((p.x >= windowRect.right - offset.x && p.x < windowRect.right) && (p.y >= windowRect.top && p.y <= windowRect.top + offset.y));
+    bounds.left += windowRect.left;
+    bounds.top += windowRect.top;
+    bounds.right += windowRect.left;
+    bounds.bottom += windowRect.top;
+
+    return ((p.x >= bounds.left && p.x < bounds.right) && (p.y >= bounds.top && p.y <= bounds.bottom));
 }
 
 // Checks if the class of the window sent in parameter corresponds to className
@@ -77,12 +82,14 @@ LRESULT WINAPI mozWndProcHook(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             if ((int)wParam == GWL_STYLE) {
                 STYLESTRUCT* style = (STYLESTRUCT*)lParam;
 
+                // Sets whenever Firefox already added a bar to it or not, if it's the case, do NOT patch it. It breaks dev tools and the title bar option
+                SetWindowLongPtrW_Original(hWnd, windowFlagsAddress, (style->styleNew & WS_SYSMENU) == 0);
+                
                 // Append WS_SYSMENU to show the titlebar buttons
-                if ((style->styleNew & WS_CAPTION) == WS_CAPTION) {
+                if ((style->styleNew & WS_CAPTION) == WS_CAPTION)
                     style->styleNew |= WS_SYSMENU;
-                } else {
+                else
                     style->styleNew &= ~WS_SYSMENU;
-                }
             }
             break;
         case WM_NCHITTEST:
@@ -90,7 +97,7 @@ LRESULT WINAPI mozWndProcHook(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         case WM_NCLBUTTONDOWN:
         case WM_NCLBUTTONUP:
         case WM_NCLBUTTONDBLCLK:
-            if (isMozWindowed(hWnd)) {
+            if (GetWindowLongPtrW_Original(hWnd, windowFlagsAddress) && isMozWindowed(hWnd)) {
                 POINT p = {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
                 if (isCursorInControlsArea(hWnd, p)) {
                     LRESULT dwmResult;
@@ -109,7 +116,7 @@ LRESULT WINAPI mozWndProcHook(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             }
             break;
         case WM_NCCALCSIZE:
-            if ((GetWindowLongPtr(hWnd, GWL_STYLE) & (WS_MAXIMIZE | WS_CAPTION)) == (WS_MAXIMIZE | WS_CAPTION)) {
+            if (GetWindowLongPtrW_Original(hWnd, windowFlagsAddress) && (GetWindowLongPtr(hWnd, GWL_STYLE) & (WS_MAXIMIZE | WS_CAPTION)) == (WS_MAXIMIZE | WS_CAPTION)) {
                 // clientRect->top needs to stay as 0 or else it breaks DwmDefWindowProc on maximized windows (thanks microsoft)
 
                 RECT* clientRect =
@@ -136,7 +143,8 @@ ATOM WINAPI RegisterClassW_Hook(WNDCLASSW* cl) {
         // The window procedure isn't hooked here already since it leads to a crash on latest Firefox
         mozWndProc = cl->lpfnWndProc;
         wndProcAddress = cl->cbWndExtra;
-        cl->cbWndExtra += sizeof(LONG_PTR);
+        windowFlagsAddress = wndProcAddress + sizeof(LONG_PTR);
+        cl->cbWndExtra += sizeof(LONG_PTR) * 2;
     }
     return RegisterClassW_Original(cl);
 }
