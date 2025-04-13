@@ -38,6 +38,12 @@ Running on LibreWolf version `136.0.4-1` (latest version as of April 2025)
 ![Firefox Developer Edition](screenshots/devedition-vertical.png)
 Running on Firefox Developer Edition `138.0b6` (latest version as of April 2025), with vertical tabs on
 
+### Credits
+
+- Theme: [Aero10 by vaporvance](https://www.deviantart.com/vaporvance/art/Aero10-for-Windows-10-1903-22H2-909711949)
+- Glass effects: [OpenGlass](https://github.com/ALTaleX531/OpenGlass/)
+- Window metrics: [Aero Window Manager](https://github.com/Dulappy/aero-window-manager/) (using configuration from theme)
+
 ## QNA
 
 ### 1. Will this work on Chrome/Edge/Any other Chromium based browser?
