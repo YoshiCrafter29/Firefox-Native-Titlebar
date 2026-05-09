@@ -4,6 +4,9 @@ A Windhawk mod to bring back the native titlebar on the latest version of Firefo
 
 The titlebar buttons are fully functional, both when the window is maximized and isn't.
 
+> [!WARNING]
+> Since making this project, I have moved to Linux, so don't expect updates on it anytime soon!
+
 ## Installation steps
 
 1. On your Firefox profile, make sure that in `about:config`, those properties are set:
